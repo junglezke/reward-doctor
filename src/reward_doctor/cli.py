@@ -1,8 +1,8 @@
 """Command line interface.
 
-    rewardlint audit my_project.rewards:accuracy_reward
-    rewardlint compare
-    rewardlint corpus --category exploit
+    reward-doctor audit my_project.rewards:accuracy_reward
+    reward-doctor compare
+    reward-doctor corpus --category exploit
 """
 
 from __future__ import annotations
@@ -20,18 +20,18 @@ from .report import emit
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="rewardlint",
+        prog="reward-doctor",
         description="Find out what your reward function actually accepts.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "examples:\n"
-            "  rewardlint audit my_project.rewards:accuracy_reward\n"
-            "  rewardlint audit ./rewards.py:check --format markdown\n"
-            "  rewardlint compare               # audit the built-in reference verifiers\n"
-            "  rewardlint corpus --category exploit\n"
+            "  reward-doctor audit my_project.rewards:accuracy_reward\n"
+            "  reward-doctor audit ./rewards.py:check --format markdown\n"
+            "  reward-doctor compare               # audit the built-in reference verifiers\n"
+            "  reward-doctor corpus --category exploit\n"
         ),
     )
-    parser.add_argument("--version", action="version", version=f"rewardlint {__version__}")
+    parser.add_argument("--version", action="version", version=f"reward-doctor {__version__}")
     sub = parser.add_subparsers(dest="command")
 
     audit_cmd = sub.add_parser("audit", help="audit a reward function")
@@ -97,7 +97,7 @@ def load_target(target: str) -> Callable:
         path = os.path.abspath(module_ref)
         if not os.path.exists(path):
             raise FileNotFoundError(f"no such file: {module_ref}")
-        spec = importlib.util.spec_from_file_location("_rewardlint_target", path)
+        spec = importlib.util.spec_from_file_location("_reward_doctor_target", path)
         if spec is None or spec.loader is None:
             raise ImportError(f"cannot load {module_ref}")
         module = importlib.util.module_from_spec(spec)
@@ -130,7 +130,7 @@ def _cmd_audit(args) -> int:
     try:
         fn = load_target(args.target)
     except Exception as exc:
-        print(f"rewardlint: {exc}", file=sys.stderr)
+        print(f"reward-doctor: {exc}", file=sys.stderr)
         return 2
 
     try:
@@ -142,7 +142,7 @@ def _cmd_audit(args) -> int:
             include_contested=args.include_contested,
         )
     except Exception as exc:
-        print(f"rewardlint: {exc}", file=sys.stderr)
+        print(f"reward-doctor: {exc}", file=sys.stderr)
         return 2
 
     if args.format == "terminal" and args.no_color:

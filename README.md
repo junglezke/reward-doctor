@@ -1,21 +1,21 @@
 <div align="center">
 
-# rewardlint
+# reward-doctor
 
 **Your reward function has a false-positive rate. You have never measured it.**
 
-`rewardlint` runs your RLVR verifier against a corpus of adversarial completions
+`reward-doctor` runs your RLVR verifier against a corpus of adversarial completions
 and tells you what it accepts that it shouldn't, and what it rejects that it should.
 
-[![CI](https://github.com/junglezke/rewardlint/actions/workflows/ci.yml/badge.svg)](https://github.com/junglezke/rewardlint/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/rewardlint.svg)](https://pypi.org/project/rewardlint/)
-[![Python](https://img.shields.io/pypi/pyversions/rewardlint.svg)](https://pypi.org/project/rewardlint/)
+[![CI](https://github.com/junglezke/reward-doctor/actions/workflows/ci.yml/badge.svg)](https://github.com/junglezke/reward-doctor/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/reward-doctor.svg)](https://pypi.org/project/reward-doctor/)
+[![Python](https://img.shields.io/pypi/pyversions/reward-doctor.svg)](https://pypi.org/project/reward-doctor/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 
 **No dependencies. No GPU. No model calls. Runs in under a second.**
 
 
-<img src="docs/assets/report.svg" alt="rewardlint auditing a reward function: 38% false-positive rate, three exploit strategies accepted" width="100%">
+<img src="docs/assets/report.svg" alt="reward-doctor auditing a reward function: 38% false-positive rate, three exploit strategies accepted" width="100%">
 
 </div>
 
@@ -41,11 +41,12 @@ Reward: **1.0**. Every time. The model never has to solve anything, your reward
 curve goes up, and nothing on your dashboard says otherwise.
 
 ```bash
-pip install rewardlint
-rewardlint compare
+pip install reward-doctor
+reward-doctor compare
 ```
 
-Or the latest from `main`: `pip install git+https://github.com/junglezke/rewardlint`.
+Or the latest from `main`: `pip install git+https://github.com/junglezke/reward-doctor`.
+`rewardlint` works as a short alias for the command; it is also the name 0.1.0 shipped under.
 
 ```
   verifier              FP     FN  exploits   attacks that work
@@ -69,18 +70,18 @@ who ships it knows that.
 ## Audit your own
 
 ```bash
-rewardlint audit my_project.rewards:accuracy_reward
-rewardlint audit ./rewards.py:check --format markdown -o report.md
+reward-doctor audit my_project.rewards:accuracy_reward
+reward-doctor audit ./rewards.py:check --format markdown -o report.md
 ```
 
-Almost any signature works. `rewardlint` inspects your function and figures out
+Almost any signature works. `reward-doctor` inspects your function and figures out
 how to call it — `f(completion, reference)`, `f(prediction, ground_truth)`,
 verl's `f(solution_str, ground_truth)`, TRL's batched
 `f(completions, **kwargs)` — and prints the convention it chose, so a wrong
 guess is visible rather than silently producing a nonsense report.
 
 ```
-  rewardlint 0.1.0  my_project.rewards:accuracy_reward
+  reward-doctor 0.1.0  my_project.rewards:accuracy_reward
   ────────────────────────────────────────────────────────────────────────
   83 cases  ·  keyword: f(completion=completion, reference=reference)
 
@@ -106,7 +107,7 @@ guess is visible rather than silently producing a nonsense report.
 From Python:
 
 ```python
-from rewardlint import audit
+from reward_doctor import audit
 from my_project.rewards import accuracy_reward
 
 result = audit(accuracy_reward)
@@ -121,7 +122,7 @@ for attack, cases in result.attacks_that_work.items():
 In CI, so a change to your grader cannot quietly open a hole:
 
 ```bash
-rewardlint audit my_project.rewards:accuracy_reward --fail-on exploit
+reward-doctor audit my_project.rewards:accuracy_reward --fail-on exploit
 ```
 
 ## What it tests
@@ -153,11 +154,11 @@ The nine exploit strategies:
 The last three matter if you grade with an LLM or a rubric: **your completion can
 address your grader directly**, and a judge that reads text will read that too.
 
-Browse them: `rewardlint corpus --category exploit`.
+Browse them: `reward-doctor corpus --category exploit`.
 
 ## The verifier that holds up
 
-`rewardlint.reference.robust_match` is the constructive half — 0% false positives,
+`reward_doctor.reference.robust_match` is the constructive half — 0% false positives,
 2% false negatives, no exploits accepted. Copy it, or copy the three ideas, which
 matter in this order:
 
@@ -187,7 +188,7 @@ the report classifies the verifier before quoting a rate (below).
 **open-r1's `tag_count_reward`** pays 0.25 for each correctly formed tag. Run against
 the default threshold it "accepts" `<think>reasoning</think>` with no answer at all,
 for 0.25. That is a threshold artefact rather than a finding — the function is doing
-exactly what it says — so `rewardlint` detects partial credit and asks you for a
+exactly what it says — so `reward-doctor` detects partial credit and asks you for a
 threshold instead of reporting a false-positive rate that means nothing:
 
 ```
@@ -202,17 +203,17 @@ format reward. That is the format-farming surface, and whether it matters depend
 how much of your total reward variance the format term carries.
 
 `open-r1`'s functions also use TRL's chat protocol — `completions` is a list of
-message lists, not strings — and nothing in the signature says so. `rewardlint` probes
+message lists, not strings — and nothing in the signature says so. `reward-doctor` probes
 both shapes once and keeps the one that works, so these run unmodified.
 
 ## Not every high false-negative rate is a bug
 
-Run `rewardlint` against verl's GSM8K scorer and it reports a **98% false-negative
+Run `reward-doctor` against verl's GSM8K scorer and it reports a **98% false-negative
 rate**. That is not a defect. That verifier requires the `#### N` answer format, so it
 correctly refuses every completion that does not use it.
 
 A tool that cannot tell those two situations apart is worse than no tool, so
-`rewardlint` classifies what it is looking at and tells you which number matters:
+`reward-doctor` classifies what it is looking at and tells you which number matters:
 
 | profile | shape | what to read |
 |---|---|---|
@@ -242,16 +243,16 @@ have been wrong to report as a bug. Testing the tool against real code changed t
 
 ## Related
 
-`rewardlint` answers *can my verifier be gamed?*
-[**rldoctor**](https://github.com/junglezke/rldoctor) answers *is it being gamed
+`reward-doctor` answers *can my verifier be gamed?*
+[**rl-doctor**](https://github.com/junglezke/rl-doctor) answers *is it being gamed
 right now?* — it reads a training log and flags the reward/eval divergence that
 means an exploit has been found. They are useful separately and better together:
-rldoctor tells you to audit the verifier, and this is how you audit it.
+rl-doctor tells you to audit the verifier, and this is how you audit it.
 
 **[CHEATER](https://github.com/aabhimittal/RLVR-stress-test)** goes after the same
 question from the other end, and it is worth knowing which one you want:
 
-| | `rewardlint` | CHEATER |
+| | `reward-doctor` | CHEATER |
 |---|---|---|
 | approach | a fixed, human-readable corpus: 87 cases, each with a stated reason | *search*: a GRPO-style optimiser over ~250k attack programs, plus metamorphic and memorisation checks |
 | output | which specific cases your verifier gets wrong, grouped by attack | a normalised exploitability score `Xi` and the attack programs that achieve it |
@@ -259,7 +260,7 @@ question from the other end, and it is worth knowing which one you want:
 | cost | ~90 verifier calls against a fixed set, so a diff between two runs is a diff in your verifier | a few thousand calls; seeded search, reproducible per seed |
 | best for | a lint step: *did this change to my grader open a hole?* | a pen-test before an expensive run: *what is the worst a policy could find?* |
 
-Run `rewardlint` on every commit and something like CHEATER before a large run. They
+Run `reward-doctor` on every commit and something like CHEATER before a large run. They
 catch different things: a fixed corpus cannot find an exploit nobody has written down,
 and a search cannot tell you in one line why case `x.negation.plain` failed.
 
@@ -271,7 +272,7 @@ false positives), and [*LLMs Gaming Verifiers*](https://arxiv.org/abs/2604.15149
 ## Development
 
 ```bash
-git clone https://github.com/junglezke/rewardlint && cd rewardlint
+git clone https://github.com/junglezke/reward-doctor && cd reward-doctor
 pip install -e ".[dev]"
 pytest      # 88 tests
 python tools/make_banner.py   # regenerate the README image
@@ -288,7 +289,7 @@ is not in the corpus.** Open an issue with the completion — you do not need to
 write the code. A strategy that beat a real grader is worth more than a hundred
 synthetic variations.
 
-Adding a case is one entry in `src/rewardlint/corpus/`. Every case must state
+Adding a case is one entry in `src/reward_doctor/corpus/`. Every case must state
 `why` it exists: this corpus is a collection of opinions about what a verifier
 should accept, and an opinion without a reason cannot be argued with or improved.
 

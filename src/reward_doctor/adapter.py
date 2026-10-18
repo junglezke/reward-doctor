@@ -228,7 +228,7 @@ def to_score(result: Any) -> float:
             return to_score(items[0])
         raise AdapterError(
             f"reward function returned {len(items)} values for one example; "
-            "rewardlint grades one completion at a time"
+            "reward-doctor grades one completion at a time"
         )
     # numpy / torch scalars
     item = getattr(result, "item", None)

@@ -1,6 +1,16 @@
 # Changelog
 
-## [0.1.0] — 2026-10-04
+## [0.2.0] — 2026-10-18
+
+### Changed
+
+- **Renamed from `rewardlint` to `reward-doctor`**, so the three tools read as one family
+  (finetune-doctor, rl-doctor, reward-doctor): PyPI package `reward-doctor`, import name
+  `reward_doctor`, repository `junglezke/reward-doctor`. The `rewardlint` command still works
+  as a short alias, and `REWARDLINT_ASCII` is still honoured alongside the new
+  `REWARD_DOCTOR_ASCII`. No behaviour changes.
+
+## [0.1.0] — 2026-10-04 (published as `rewardlint`)
 
 First public release.
 

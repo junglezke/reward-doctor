@@ -31,7 +31,7 @@ def _supports_color() -> bool:
 
 
 def _supports_unicode() -> bool:
-    if os.environ.get("REWARDLINT_ASCII"):
+    if os.environ.get("REWARD_DOCTOR_ASCII") or os.environ.get("REWARDLINT_ASCII"):  # old name still honoured
         return False
     encoding = getattr(sys.stdout, "encoding", None) or ""
     try:
@@ -64,7 +64,7 @@ def render(
 
     out: List[str] = [
         "",
-        "  " + paint("rewardlint", "bold", "cyan") + paint(f" {audit.version}", "dim")
+        "  " + paint("reward-doctor", "bold", "cyan") + paint(f" {audit.version}", "dim")
         + "  " + paint(audit.name, "bold"),
         "  " + paint(rule * (width - 4), "dim"),
         "  " + paint(f"{len(audit.outcomes)} cases  {dot}  {audit.call_plan}", "dim"),

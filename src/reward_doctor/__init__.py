@@ -1,6 +1,6 @@
-"""rewardlint -- find out what your reward function actually accepts.
+"""reward-doctor -- find out what your reward function actually accepts.
 
-    from rewardlint import audit
+    from reward_doctor import audit
     from my_project import my_reward_fn
 
     audit(my_reward_fn).print()
@@ -11,7 +11,7 @@ from .case import Case
 from .corpus import ALL_CASES, load
 from .reference import REFERENCE_VERIFIERS
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "ALL_CASES",

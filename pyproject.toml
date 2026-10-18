@@ -3,8 +3,8 @@ requires = ["hatchling>=1.21"]
 build-backend = "hatchling.build"
 
 [project]
-name = "rewardlint"
-version = "0.1.0"
+name = "reward-doctor"
+version = "0.2.0"
 description = "Find out what your RLVR reward function actually accepts."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -32,15 +32,17 @@ dependencies = []
 dev = ["pytest>=7.0", "pytest-cov>=4.0", "ruff>=0.6"]
 
 [project.urls]
-Homepage = "https://github.com/junglezke/rewardlint"
-Repository = "https://github.com/junglezke/rewardlint"
-Issues = "https://github.com/junglezke/rewardlint/issues"
+Homepage = "https://github.com/junglezke/reward-doctor"
+Repository = "https://github.com/junglezke/reward-doctor"
+Issues = "https://github.com/junglezke/reward-doctor/issues"
 
 [project.scripts]
-rewardlint = "rewardlint.cli:main"
+reward-doctor = "reward_doctor.cli:main"
+# Short alias, and the command this project shipped under as `rewardlint` 0.1.0.
+rewardlint = "reward_doctor.cli:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/rewardlint"]
+packages = ["src/reward_doctor"]
 
 [tool.ruff]
 line-length = 100

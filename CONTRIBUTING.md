@@ -1,4 +1,4 @@
-# Contributing to rewardlint
+# Contributing to reward-doctor
 
 ## The most valuable contribution
 
@@ -17,7 +17,7 @@ the `contested` set or the corpus gets more accurate; both are wins.
 
 ## Adding a case
 
-One entry in `src/rewardlint/corpus/`. Every case must carry:
+One entry in `src/reward_doctor/corpus/`. Every case must carry:
 
 - a stable `id` in the existing namespace (`eq.*`, `ne.*`, `fmt.*`, `x.<attack>.*`),
 - the right `category` — the dataclass enforces that exploits and distinctions
@@ -37,7 +37,7 @@ Only if it represents a pattern people actually write. The point of
 trade-off, not to collect strawmen.
 
 Note that the measured rates for all of them are asserted as exact values in
-`tests/test_rewardlint.py` and published in the README. If your change moves
+`tests/test_reward_doctor.py` and published in the README. If your change moves
 them, update both — a stale README is a bug.
 
 ## Development

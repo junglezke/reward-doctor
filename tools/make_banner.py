@@ -12,9 +12,9 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from ansi2svg import render  # noqa: E402
 
-from rewardlint import audit  # noqa: E402
-from rewardlint.reference import substring_match  # noqa: E402
-from rewardlint.report.terminal import render as render_report  # noqa: E402
+from reward_doctor import audit  # noqa: E402
+from reward_doctor.reference import substring_match  # noqa: E402
+from reward_doctor.report.terminal import render as render_report  # noqa: E402
 
 lines = render_report(
     audit(substring_match, name="my_project.rewards:accuracy_reward"),
@@ -27,7 +27,7 @@ head = lines[1:14]
 exploits = next(i for i, line in enumerate(lines) if "EXPLOITS THAT WORK" in line)
 body = lines[exploits : exploits + 13]
 
-svg = render("\n".join(head + body).rstrip(), "rewardlint audit my_project.rewards:accuracy_reward")
+svg = render("\n".join(head + body).rstrip(), "reward-doctor audit my_project.rewards:accuracy_reward")
 out = pathlib.Path(__file__).parent.parent / "docs" / "assets" / "report.svg"
 out.write_text(svg, encoding="utf-8")
 print(f"wrote {out}")

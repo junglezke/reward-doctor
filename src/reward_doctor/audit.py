@@ -260,7 +260,7 @@ def audit(
 
     Args:
         reward_fn: your verifier. Almost any signature works -- see
-            :mod:`rewardlint.adapter`.
+            :mod:`reward_doctor.adapter`.
         threshold: a score strictly above this counts as accepted.
         include_contested: include cases whose expected verdict is a judgement
             call. Off by default; they are reported separately.

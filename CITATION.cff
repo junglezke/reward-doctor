@@ -1,12 +1,12 @@
 cff-version: 1.2.0
-title: "rewardlint: adversarial auditing for RLVR reward functions"
+title: "reward-doctor: adversarial auditing for RLVR reward functions"
 message: "If you use this software, please cite it as below."
 type: software
 authors:
   - alias: junglezke
-repository-code: "https://github.com/junglezke/rewardlint"
+repository-code: "https://github.com/junglezke/reward-doctor"
 abstract: >-
-  rewardlint measures what an RLVR verifier accepts and rejects. It runs a
+  reward-doctor measures what an RLVR verifier accepts and rejects. It runs a
   reward function against a corpus of adversarial completions covering answer
   equivalence, genuine distinctions, realistic output formatting, and nine
   exploit strategies that a policy can reach by gradient descent without

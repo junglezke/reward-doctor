@@ -33,13 +33,14 @@ jobs:
           python-version: ${{ matrix.python }}
           cache: pip
       - run: pip install -e ".[dev]"
-      - run: pytest -q --cov=rewardlint --cov-report=term-missing
+      - run: pytest -q --cov=reward_doctor --cov-report=term-missing
       - name: CLI smoke test
         run: |
+          reward-doctor --version
           rewardlint --version
-          rewardlint compare
-          rewardlint corpus --category exploit
-          rewardlint audit rewardlint.reference:robust_match
+          reward-doctor compare
+          reward-doctor corpus --category exploit
+          reward-doctor audit reward_doctor.reference:robust_match
         shell: bash
 
   lint:
@@ -66,4 +67,5 @@ jobs:
         run: |
           python -m venv /tmp/clean
           /tmp/clean/bin/pip install dist/*.whl
-          /tmp/clean/bin/rewardlint compare
+          /tmp/clean/bin/reward-doctor compare
+          /tmp/clean/bin/rewardlint --version

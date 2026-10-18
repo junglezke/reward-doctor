@@ -9,7 +9,7 @@ exploit strategies still get through.
 
 import re
 
-from rewardlint import audit
+from reward_doctor import audit
 
 _BOXED = re.compile(r"\\boxed\{([^}]*)\}")
 

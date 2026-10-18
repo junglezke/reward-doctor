@@ -1,4 +1,4 @@
-"""Tests for rewardlint.
+"""Tests for reward-doctor.
 
 The reference-verifier rates are asserted as exact numbers. They are published
 in the README, so a silent change to the corpus or to the matching logic that
@@ -12,12 +12,12 @@ import json
 
 import pytest
 
-from rewardlint import corpus
-from rewardlint.adapter import AdapterError, CallPlan, plan, to_score
-from rewardlint.audit import audit
-from rewardlint.case import Case
-from rewardlint.cli import main
-from rewardlint.reference import (
+from reward_doctor import corpus
+from reward_doctor.adapter import AdapterError, CallPlan, plan, to_score
+from reward_doctor.audit import audit
+from reward_doctor.case import Case
+from reward_doctor.cli import main
+from reward_doctor.reference import (
     REFERENCE_VERIFIERS,
     boxed_exact,
     exact_match,
@@ -25,7 +25,7 @@ from rewardlint.reference import (
     robust_match,
     substring_match,
 )
-from rewardlint.report import render
+from reward_doctor.report import render
 
 # -- corpus -----------------------------------------------------------------
 
@@ -387,7 +387,7 @@ def test_json_report_is_valid():
 
 
 def test_terminal_report_has_an_ascii_mode():
-    from rewardlint.report.terminal import render as render_terminal
+    from reward_doctor.report.terminal import render as render_terminal
 
     render_terminal(audit(robust_match), color=False, unicode=False).encode("ascii", "replace")
 
@@ -420,22 +420,22 @@ def test_cli_corpus_lists_cases(capsys):
 
 
 def test_cli_audit_gates_on_exploits(capsys):
-    assert main(["audit", "rewardlint.reference:substring_match", "-f", "json"]) == 1
-    assert main(["audit", "rewardlint.reference:robust_match", "-f", "json"]) == 0
+    assert main(["audit", "reward_doctor.reference:substring_match", "-f", "json"]) == 1
+    assert main(["audit", "reward_doctor.reference:robust_match", "-f", "json"]) == 0
 
 
 def test_cli_audit_fail_on_any(capsys):
-    assert main(["audit", "rewardlint.reference:robust_match", "-f", "json", "--fail-on", "any"]) == 1
-    assert main(["audit", "rewardlint.reference:robust_match", "-f", "json", "--fail-on", "never"]) == 0
+    assert main(["audit", "reward_doctor.reference:robust_match", "-f", "json", "--fail-on", "any"]) == 1
+    assert main(["audit", "reward_doctor.reference:robust_match", "-f", "json", "--fail-on", "never"]) == 0
 
 
 def test_cli_reports_a_bad_target_without_a_traceback(capsys):
     assert main(["audit", "nope.module:fn"]) == 2
-    assert "rewardlint:" in capsys.readouterr().err
+    assert "reward-doctor:" in capsys.readouterr().err
 
 
 def test_cli_suggests_callables_when_the_attribute_is_missing(capsys):
-    assert main(["audit", "rewardlint.reference:no_such_fn"]) == 2
+    assert main(["audit", "reward_doctor.reference:no_such_fn"]) == 2
     assert "robust_match" in capsys.readouterr().err
 
 
@@ -451,9 +451,9 @@ def test_cli_loads_a_function_from_a_file(tmp_path, capsys):
 
 def test_cli_writes_to_a_file(tmp_path, capsys):
     target = tmp_path / "report.md"
-    main(["audit", "rewardlint.reference:last_number", "-f", "markdown",
+    main(["audit", "reward_doctor.reference:last_number", "-f", "markdown",
           "-o", str(target), "--fail-on", "never"])
-    assert target.read_text(encoding="utf-8").startswith("## rewardlint")
+    assert target.read_text(encoding="utf-8").startswith("## reward-doctor")
 
 
 def test_no_command_prints_help(capsys):
